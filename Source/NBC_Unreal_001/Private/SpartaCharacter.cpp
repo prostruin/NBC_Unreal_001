@@ -3,8 +3,9 @@
 
 #include "SpartaCharacter.h"
 #include "EnhancedInputComponent.h"
-#include "SpartaGameState.h"
 #include "SpartaPlayerController.h"
+#include "SpartaGameState.h"
+
 #include "camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -81,7 +82,7 @@ void ASpartaCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 					&ASpartaCharacter::EndJump
 				);
 			}
-			if (PlayerController->JumpAction)
+			if (PlayerController->LookAction)
 			{
 				EnhancedInput->BindAction(
 					PlayerController->LookAction,

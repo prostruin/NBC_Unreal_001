@@ -91,9 +91,9 @@ void AMovingActor::Tick(float DeltaTime)
 			FVector MoveAmount = Arrow->GetForwardVector() * MoveDirection * MoveSpeed * DeltaTime;
 			FVector CurrentLocation = GetActorLocation();
 			FVector NewLocation = CurrentLocation + MoveAmount;
-			float DistanceFromStart = FVector::Dist(StartLocation, NewLocation);
+			float Distance = FVector::Dist(StartLocation, NewLocation);
 
-			if (DistanceFromStart >= MaxRange)
+			if (Distance >= MaxRange)
 			{
 				MoveDirection *= -1.0f;
 				isdistance = true;
@@ -101,7 +101,7 @@ void AMovingActor::Tick(float DeltaTime)
 
 			if (isdistance)
 			{
-				if (DistanceFromStart <= 1)
+				if (Distance <= 1)
 				{
 					MoveDirection *= -1.0f;
 					isdistance = false;
@@ -109,7 +109,7 @@ void AMovingActor::Tick(float DeltaTime)
 			}
 
 			SetActorLocation(NewLocation);
-			UE_LOG(LogTemp, Warning, TEXT("위치값: %.8f"), DistanceFromStart);
+			UE_LOG(LogTemp, Warning, TEXT("위치값: %.8f"), Distance);
 		}
 	}
 }
