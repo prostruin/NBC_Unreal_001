@@ -4,7 +4,7 @@
 #include "Components/WidgetComponent.h"
 #include "SpartaCharacter.generated.h"
 
-class UProgressBar;
+
 class USpringArmComponent;
 class UCameraComponent;
 struct FInputActionValue;
@@ -33,8 +33,6 @@ public:
 protected:
 	UPROPERTY()
 	UUserWidget* CachedHUDWidget;
-	UPROPERTY()
-	UProgressBar* HealthProgressBar;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
 	float MaxHealth;

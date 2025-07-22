@@ -94,13 +94,14 @@ void ASpartaGameState::OnCoinCollected()
 		EndWave();
 		// EndLevel();
 	}
+	UpdateHUD();
 }
 
 
 
 void ASpartaGameState::OnLevelTimeUp()
 {
-	StartWave();
+	EndWave();
 	//EndLevel();
 }
 
@@ -129,6 +130,12 @@ void ASpartaGameState::UpdateHUD()
 						}
 					}
 				}
+				if (UTextBlock* TotalCount = Cast<UTextBlock>(HUDWidget->GetWidgetFromName(TEXT("TotalCount"))))
+				{
+					TotalCount->SetText(FText::FromString(FString::Printf(TEXT("Total Count : %d / %d"),CollectedCoinCount,SpawnedCoinCount)));
+				}
+
+
 				if (UTextBlock* LevelIndexText = Cast<UTextBlock>(HUDWidget->GetWidgetFromName(TEXT("Wave"))))
 				{
 					LevelIndexText->SetText(FText::FromString(FString::Printf(TEXT("Wave: %d"), CurrentWaveIndex+1)));
@@ -157,7 +164,7 @@ void ASpartaGameState::StartWave()
 	TArray<AActor*> FoundVolumes;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASpawnVolume::StaticClass(), FoundVolumes);
 
-	const int32 ItemToSpawn = 5 + (CurrentWaveIndex * 5);
+	const int32 ItemToSpawn = 20 + (CurrentWaveIndex * 5);
 
 	for (int32 i = 0; i < ItemToSpawn; i++)
 	{

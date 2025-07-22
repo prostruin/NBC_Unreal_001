@@ -181,7 +181,7 @@ void ASpartaCharacter::StartSprint(const FInputActionValue& value)
 	{
 		GetCharacterMovement()->MaxWalkSpeed = SprintSpeed;
 	}
-	UE_LOG(LogTemp, Warning, TEXT("bIsSprint: %s"), bIsSprint ? TEXT("True") : TEXT("False"));
+
 	if (!bIsSprint)
 	{
 		bIsSprint = true;
@@ -266,5 +266,10 @@ void ASpartaCharacter::AddHealth(float Amount)
 float ASpartaCharacter::GetHealth() const
 {
 	return Health;
+}
+
+float ASpartaCharacter::GetHealthPercent() const
+{
+	return 0.0f;
 }
 
