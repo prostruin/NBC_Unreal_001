@@ -130,6 +130,15 @@ float ASpartaCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damag
 		OnDeath();
 	}
 
+	if (CachedHUDWidget)
+	{
+		UFunction* DamageFunc = CachedHUDWidget->FindFunction(FName("PlayDamageAnim"));
+		if (DamageFunc)
+		{
+			CachedHUDWidget->ProcessEvent(DamageFunc, nullptr);
+
+		}
+	}
 
 	return ActualDamage;
 }
