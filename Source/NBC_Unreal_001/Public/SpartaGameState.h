@@ -34,6 +34,14 @@ public:
 	int32 MaxLevels;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Level")
 	TArray<FName> LevelMapNames;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "wave")
+	int32 CurrentWaveIndex;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Level")
+	int32 MaxWaves;
+
+
+
+
 	bool ManyCoin;
 	FTimerHandle LevelTimerHandle;
 	FTimerHandle HUDUpdateTimeHandle;
@@ -51,5 +59,7 @@ public:
 	void OnLevelTimeUp();
 	void EndLevel();
 	void UpdateHUD();
+	void StartWave();
+	void EndWave();
 
 };

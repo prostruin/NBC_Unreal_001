@@ -1,6 +1,6 @@
 ﻿#include "SpartaPlayerController.h"
 #include "SpartaGameState.h"
-
+#include "SpartaCharacter.h"
 #include "SpartaGameInstance.h"
 #include "Blueprint/UserWidget.h"
 #include "Kismet\GameplayStatics.h"
@@ -50,7 +50,7 @@ UUserWidget* ASpartaPlayerController::GetHUDWidget() const
 
 void ASpartaPlayerController::ShowGameHUD()
 {
-	{
+
 		if (HUDWidgetInstance)
 		{
 			HUDWidgetInstance->RemoveFromParent();
@@ -70,6 +70,17 @@ void ASpartaPlayerController::ShowGameHUD()
 				HUDWidgetInstance->AddToViewport();
 				bShowMouseCursor = false;
 				SetInputMode(FInputModeGameOnly());
+
+				UFunction* PlayAnimFunc = HUDWidgetInstance->FindFunction(FName("PlayWaveAnim"));
+				if (PlayAnimFunc)
+				{
+					HUDWidgetInstance->ProcessEvent(PlayAnimFunc, nullptr);
+				}
+
+			}
+			if (ASpartaCharacter* SpartaCharacter = Cast<ASpartaCharacter>(GetPawn()))
+			{
+				SpartaCharacter->CachedHUD();
 			}
 			ASpartaGameState* SpartaGameState = GetWorld() ? GetWorld()->GetGameState<ASpartaGameState>() : nullptr;
 			if (SpartaGameState)
@@ -77,7 +88,6 @@ void ASpartaPlayerController::ShowGameHUD()
 				SpartaGameState->UpdateHUD();
 			}
 		}
-	}
 }
 
 void ASpartaPlayerController::ShowMainMenu(bool bIsRestart)
@@ -142,7 +152,7 @@ void ASpartaPlayerController::StartGame()
 {
 	if (USpartaGameInstance* SpartaGameInstance = Cast<USpartaGameInstance>(UGameplayStatics::GetGameInstance(this)))
 	{
-		SpartaGameInstance->CurrentLevelIndex = 0;
+		SpartaGameInstance->CurrentWaveIndex = 0;
 		SpartaGameInstance->TotalScore = 0;
 	}
 

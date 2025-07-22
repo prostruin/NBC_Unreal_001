@@ -5,7 +5,8 @@
 #include "EnhancedInputComponent.h"
 #include "SpartaPlayerController.h"
 #include "SpartaGameState.h"
-
+#include "Components\Image.h"
+#include "Components\ProgressBar.h"
 #include "camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -40,6 +41,7 @@ ASpartaCharacter::ASpartaCharacter()
 	
 	MaxHealth = 100;
 	Health = MaxHealth;
+	bIsSprint = false;
 
 }
 
@@ -48,6 +50,8 @@ void ASpartaCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	UpdateOverheadHP();
+	CachedHUD();
+
 }
 
 void ASpartaCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -58,6 +62,9 @@ void ASpartaCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	{
 		if (ASpartaPlayerController* PlayerController = Cast<ASpartaPlayerController>(GetController()))
 		{
+
+
+
 			if (PlayerController->MoveAction)
 			{
 				EnhancedInput->BindAction(
@@ -174,6 +181,21 @@ void ASpartaCharacter::StartSprint(const FInputActionValue& value)
 	{
 		GetCharacterMovement()->MaxWalkSpeed = SprintSpeed;
 	}
+	UE_LOG(LogTemp, Warning, TEXT("bIsSprint: %s"), bIsSprint ? TEXT("True") : TEXT("False"));
+	if (!bIsSprint)
+	{
+		bIsSprint = true;
+		if (CachedHUDWidget)
+		{
+			UFunction* StartFunc = CachedHUDWidget->FindFunction(FName("StartSprint"));
+			if (StartFunc)
+			{
+				CachedHUDWidget->ProcessEvent(StartFunc, nullptr);
+
+			}
+		}
+	}
+
 }
 
 void ASpartaCharacter::StopSprint(const FInputActionValue& value)
@@ -182,6 +204,21 @@ void ASpartaCharacter::StopSprint(const FInputActionValue& value)
 	{
 		GetCharacterMovement()->MaxWalkSpeed = NormalSpeed;
 	}
+
+	if (bIsSprint)
+	{
+		bIsSprint = false;
+		if (CachedHUDWidget)
+		{
+			UFunction* StopFunc = CachedHUDWidget->FindFunction(FName("StopSprint"));
+			if (StopFunc)
+			{
+				CachedHUDWidget->ProcessEvent(StopFunc, nullptr);
+			}
+		}
+	}
+
+
 }
 
 void ASpartaCharacter::OnDeath()
@@ -204,6 +241,14 @@ void ASpartaCharacter::UpdateOverheadHP()
 		HPText->SetText(FText::FromString(FString::Printf(TEXT("%.0f / %.0f"), Health, MaxHealth)));
 	}
 
+}
+
+void ASpartaCharacter::CachedHUD()
+{
+	if (ASpartaPlayerController* PlayerController = Cast<ASpartaPlayerController>(GetController()))
+	{
+		CachedHUDWidget = PlayerController->GetHUDWidget();
+	}
 }
 
 void ASpartaCharacter::AddMaxHP(float Amount)

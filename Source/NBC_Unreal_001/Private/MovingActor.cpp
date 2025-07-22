@@ -41,7 +41,6 @@ void AMovingActor::Hide()
 {
 	if (IshiddenBox)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("hide"));
 		if (IsActorHidden)
 		{
 			SetActorHiddenInGame(false);

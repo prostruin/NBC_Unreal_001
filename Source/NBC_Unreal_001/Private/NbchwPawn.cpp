@@ -58,7 +58,7 @@ void ANbchwPawn::Look(const FInputActionValue& value)
 
 	FVector2D LookInput = value.Get<FVector2D>();
 
-
+	/*
 	FRotator LookRotation = FRotator(0.0f, LookInput.X * 2.0f, 0.0f);
 	if (SpringArmComp)
 	{
@@ -68,7 +68,19 @@ void ANbchwPawn::Look(const FInputActionValue& value)
 	}
 
 	AddActorLocalRotation(LookRotation);
-	UE_LOG(LogTemp, Warning, TEXT("LookInput: X=%f, Y=%f"), LookInput.X, LookInput.Y);
+	*/
+	AddActorLocalRotation(FRotator(0.f, LookInput.X * 15.0f * GetWorld()->GetDeltaSeconds(), 0.f));
+	FRotator currentspringarmrotation = SpringArmComp->GetRelativeRotation();
+	float newpitch = currentspringarmrotation.Pitch - LookInput.Y * 15.0f * GetWorld()->GetDeltaSeconds();
+
+	newpitch = FMath::Clamp(newpitch, -80.f, 80.f);
+
+	SpringArmComp->SetRelativeRotation(FRotator(newpitch, 0.f, 0.f));
+
+
+
+
+
 }
 
 // Called every frame
