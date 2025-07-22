@@ -101,7 +101,15 @@ void ASpartaGameState::OnCoinCollected()
 
 void ASpartaGameState::OnLevelTimeUp()
 {
-	EndWave();
+	if (SpawnedCoinCount > 0 && CollectedCoinCount < SpawnedCoinCount)
+	{
+		OnGameOver();
+	}
+	else
+	{
+		EndWave();
+	}
+
 	//EndLevel();
 }
 
@@ -191,7 +199,8 @@ void ASpartaGameState::StartWave()
 		LevelDuration,
 		false
 	);
-
+	ASpartaCharacter* SpartaCharacter = Cast<ASpartaCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0));
+	SpartaCharacter->CachedHUD();
 
 }
 

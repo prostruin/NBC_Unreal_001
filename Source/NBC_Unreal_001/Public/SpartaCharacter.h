@@ -4,7 +4,7 @@
 #include "Components/WidgetComponent.h"
 #include "SpartaCharacter.generated.h"
 
-
+class UProgressBar;
 class USpringArmComponent;
 class UCameraComponent;
 struct FInputActionValue;
@@ -33,6 +33,8 @@ public:
 protected:
 	UPROPERTY()
 	UUserWidget* CachedHUDWidget;
+	UPROPERTY()
+	UProgressBar* HealthBar;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
 	float MaxHealth;
@@ -40,8 +42,6 @@ protected:
 	float Health;
 	UFUNCTION(BlueprintPure, Category = "Health")
 	float GetHealth() const;
-	UFUNCTION(BlueprintPure, Category = "Health")
-	float GetHealthPercent() const;
 
 	bool bIsSprint;
 	virtual void BeginPlay() override;
@@ -68,6 +68,7 @@ protected:
 	void OnDeath();
 
 	void UpdateOverheadHP();
+	void UpdateHealthBar();
 
 private:
 	float NormalSpeed;

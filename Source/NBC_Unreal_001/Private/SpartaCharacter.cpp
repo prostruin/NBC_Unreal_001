@@ -51,7 +51,7 @@ void ASpartaCharacter::BeginPlay()
 	Super::BeginPlay();
 	UpdateOverheadHP();
 	CachedHUD();
-
+	UpdateHealthBar();
 }
 
 void ASpartaCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -123,6 +123,7 @@ float ASpartaCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damag
 
 	Health = FMath::Clamp(Health - DamageAmount, 0.0f, MaxHealth);
 	UpdateOverheadHP();
+	UpdateHealthBar();
 
 	if (Health <= 0.0f)
 	{
@@ -243,12 +244,30 @@ void ASpartaCharacter::UpdateOverheadHP()
 
 }
 
+void ASpartaCharacter::UpdateHealthBar()
+{
+	if (!CachedHUDWidget) return;
+	if (!HealthBar)
+	{
+		HealthBar = Cast<UProgressBar>(CachedHUDWidget->GetWidgetFromName(TEXT("HealthBar")));
+	}
+	HealthBar->SetPercent(Health / MaxHealth);
+}
+
 void ASpartaCharacter::CachedHUD()
 {
 	if (ASpartaPlayerController* PlayerController = Cast<ASpartaPlayerController>(GetController()))
 	{
-		CachedHUDWidget = PlayerController->GetHUDWidget();
+
+			CachedHUDWidget = PlayerController->GetHUDWidget();
+			if (CachedHUDWidget)
+			{
+				HealthBar = nullptr;
+				UpdateHealthBar();
+			}
 	}
+
+
 }
 
 void ASpartaCharacter::AddMaxHP(float Amount)
@@ -261,15 +280,11 @@ void ASpartaCharacter::AddHealth(float Amount)
 {
 	Health = FMath::Clamp(Health + Amount, 0, MaxHealth);
 	UpdateOverheadHP();
+	UpdateHealthBar();
 }
 
 float ASpartaCharacter::GetHealth() const
 {
 	return Health;
-}
-
-float ASpartaCharacter::GetHealthPercent() const
-{
-	return 0.0f;
 }
 
